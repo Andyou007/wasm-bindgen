@@ -1,3 +1,5 @@
+import init, { Scene, WorkerPool } from './raytrace_parallel.js';
+
 const button = document.getElementById('render');
 const canvas = document.getElementById('canvas');
 const scene = document.getElementById('scene');
@@ -26,14 +28,12 @@ function loadWasm() {
     return
   }
 
-  wasm_bindgen()
+  init()
     .then(run)
     .catch(console.error);
 }
 
 loadWasm();
-
-const { Scene, WorkerPool } = wasm_bindgen;
 
 function run() {
   // The maximal concurrency of our web worker pool is `hardwareConcurrency`,

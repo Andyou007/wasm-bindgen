@@ -9,7 +9,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use web_sys::{DedicatedWorkerGlobalScope, MessageEvent};
-use web_sys::{ErrorEvent, Event, Worker};
+use web_sys::{ErrorEvent, Event, Worker, WorkerOptions, WorkerType};
 
 #[wasm_bindgen]
 pub struct WorkerPool {
@@ -73,7 +73,9 @@ impl WorkerPool {
         //   library, know what's going on?
         // * How do we not fetch a script N times? It internally then
         //   causes another script to get fetched N times...
-        let worker = Worker::new("./worker.js")?;
+        let options = WorkerOptions::new();
+        options.set_type(WorkerType::Module);
+        let worker = Worker::new_with_options("./worker.js", &options)?;
 
         // With a worker spun up send it the module/memory so it can start
         // instantiating the Wasm module. Later it might receive further

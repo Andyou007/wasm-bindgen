@@ -28,6 +28,8 @@ features = [
   'Navigator',
   'Window',
   'Worker',
+  'WorkerOptions',
+  'WorkerType',
   'DedicatedWorkerGlobalScope',
   'MessageEvent',
 ]

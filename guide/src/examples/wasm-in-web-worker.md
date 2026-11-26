@@ -10,10 +10,10 @@ the worker.
 
 ## Building & compatibility
 
-At the time of this writing, only Chrome supports modules in web workers, e.g.
-Firefox does not. To have compatibility across browsers, the whole example is
-set up without relying on ES modules as target. Therefore we have to build
-with `--target no-modules`. The full command can be found in `build.sh`.
+The example is built with `--target web`, so the generated JS is an ES module.
+The worker is created as a module worker (`WorkerType::Module`) so that it can
+`import` the generated JS as well. The full command can be found in
+`package.json`.
 
 ## `Cargo.toml`
 
@@ -41,9 +41,7 @@ when the worker returns a message.
 
 Includes the input element `#inputNumber` to type a number into and a HTML
 element `#resultField` were the result of the evaluation even/odd is written to.
-Since we require to build with `--target no-modules` to be able to load Wasm
-code in the worker across browsers, the `index.html` also includes loading
-both `wasm_in_web_worker.js` and `index.js`.
+`index.js` is loaded as an ES module.
 
 ```html
 {{#include ../../../examples/wasm-in-web-worker/index.html}}
@@ -60,9 +58,8 @@ main thread which will create a worker.
 
 ## `worker.js`
 
-Loads our Wasm file by first importing `wasm_bindgen` via
-`importScripts('./pkg/wasm_in_web_worker.js')` and then awaiting the Promise
-returned by `wasm_bindgen(...)`. Creates a new object to do the background
+Loads our Wasm file by importing the default initialization function from
+`./wasm_in_web_worker.js` and then awaiting the Promise it returns. Creates a new object to do the background
 calculation and bind a method of the object to the `onmessage` callback of the
 worker.
 
